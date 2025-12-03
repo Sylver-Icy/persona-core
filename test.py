@@ -1,4 +1,5 @@
 from core.memory_extractor import extract_memory
+from core.generator import generate_reply
 
 messages = [
     "Man today sucked, failed an exam and tilted instantly.",
@@ -33,10 +34,12 @@ messages = [
     "Low‑key I believe tech will be my escape arc.",
 ]
 
-# Ensure you pass a list of strings (like 30 msgs IRL)
+#pass a list of strings
 print("🔍 Sending messages for extraction...\n")
 
 memory = extract_memory(messages)
 
-print("📌 Extracted Memory:")
-print(memory)
+base, styled = generate_reply("How do I improve coding?", "therapist", memory)
+
+print("Before:", base)
+print("After:", styled)
