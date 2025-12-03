@@ -14,19 +14,27 @@ def generate_reply(user_message: str, persona: str, memory: dict):
 
     # build base response prompt
     base_prompt = f"""
-    You are an AI assistant.
-    You have access to the user's long‑term memory:
-    {json.dumps(memory, indent=2)}
+You are an AI assistant with access to a persistent psychological profile of the user:
 
-    Respond to the user's message factually without tone styling.
-    Tailor your response using their preferences, emotional tendencies, and learning style derived from memory.
-    You MUST explicitly incorporate the user's stored memory.
-    Reference their preferences, motivations, frustrations, tone tendencies, or learning style whenever appropriate.
-    If the memory provides relevant insight, it MUST influence the wording, framing, and advice.
-    Do NOT give generic or universal guidance — responses MUST feel customized to the user's identity.
+=== USER MEMORY ===
+{json.dumps(memory, indent=2)}
 
-    User: {user_message}
-    """
+Your job:
+→ Produce a **neutral response** to the user's message.
+→ The response MUST explicitly reflect relevant memory traits.
+→ Avoid generic or universal advice — the answer should ONLY make sense for *this specific user*.
+
+Rules:
+1. Infer WHY the user behaves or asks this way by using memory.
+2. Reference their preferences, frustrations, tone style, motivation triggers, learning style, etc.
+3. Write in a neutral explanatory tone — no persona styling, slang, or theatrics.
+4. Keep responses clear and concise, but personalized.
+
+User message:
+"{user_message}"
+
+Write the response:
+"""
 
     base_response = client.chat.completions.create(
         model="gpt-5-chat-latest",
@@ -41,25 +49,35 @@ def generate_reply(user_message: str, persona: str, memory: dict):
     persona_template = get_persona_prompt(persona)
 
     rewrite_prompt = f"""
-    Rewrite the following response using the described tone style.
+You rewrite responses into a defined personality voice.
 
-    Persona Style:
-    {persona_template}
+Persona specification:
+{persona_template}
 
-    Original Response:
-    {base_response}
+Original response:
+\"\"\"{base_response}\"\"\"
 
-    You MUST explicitly personalize the rewritten output using the user's stored memory below:
-    {json.dumps(memory, indent=2)}
+User memory profile:
+{json.dumps(memory, indent=2)}
 
-    Requirements:
-    - Reference at least one user preference, frustration pattern, motivation trigger, or learning tendency.
-    - The rewritten output MUST feel like it was crafted specifically for this user's personality.
-    - Generic persona styling without personalization is unacceptable.
-    - If necessary, rewrite until these conditions are met.
+Rewrite Objective:
+→ Same meaning, same advice outcome
+→ NEW tone, pacing, voice, framing and attitude according to persona
 
-    Output rewritten response:
-    """
+Mandatory transformation rules:
+1. Maintain factual meaning of the original answer.
+2. Amplify persona traits — attitude, metaphors, rhythm, emotional tone.
+3. PERSONALIZE using memory:
+   - reference their habits, learning style, impatience, humor, etc.
+4. Make the result feel like it was written FOR THIS USER, not for “users in general”.
+
+Do NOT:
+- Remove useful insights from base response
+- Paraphrase lazily
+- Revert to neutrality — commit to persona voice
+
+Output ONLY rewritten persona-styled response.
+"""
 
     persona_response = client.chat.completions.create(
         model="gpt-5-chat-latest",
