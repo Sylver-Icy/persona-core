@@ -1,0 +1,15 @@
+# === Python trash ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# === Virtual environments ===
+venv/
+.env
+
+# === VSCode garbage ===
+.vscode/
+
+# === macOS bs ===
+.DS_Store
