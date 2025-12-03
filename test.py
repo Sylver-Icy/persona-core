@@ -1,7 +1,7 @@
 from core.memory_extractor import extract_memory
 from core.generator import generate_reply
 
-messages = [
+DEFAULT_MESSAGES = [
     "Man today sucked, failed an exam and tilted instantly.",
     "Ended up grinding Valorant for 6 hours straight to cool off.",
     "Bro I swear when code doesn't work I rage more than in ranked.",
@@ -16,7 +16,7 @@ messages = [
     "Theory lectures are torture, who designs this garbage?",
     "I learn best by doing, not reading some 200 page notes.",
     "Whenever my code fails I full rage but still come back like a toxic ex.",
-    "Music hits different when debugging.",
+    "Music hits different when debugging. Oh also i'm nikhil",
     "Waiting for replies is physical pain, why is everyone slow.",
     "Dark humor is elite, don't judge me.",
     "Slow internet should be a war crime.",
@@ -33,13 +33,3 @@ messages = [
     "I want to build cool shit, not memorize garbage.",
     "Low‑key I believe tech will be my escape arc.",
 ]
-
-#pass a list of strings
-print("🔍 Sending messages for extraction...\n")
-
-memory = extract_memory(messages)
-
-base, styled = generate_reply("How do I improve coding?", "therapist", memory)
-
-print("Before:", base)
-print("After:", styled)
